@@ -7,6 +7,11 @@ from game.barrel import Barrel  # Importa a classe Barrel do módulo barrel
 from game.flame import Flame  # Importa a classe Flame do módulo flame
 from game.hammer import Hammer  # Importa a classe Hammer do módulo hammer
 from map.level import Level  # Importa a classe Level do módulo level
+# main.py
+from database import initialize_db, register_user, login_user, update_score, get_score
+
+initialize_db()
+
 
 # Configura o título da janela do jogo
 pygame.display.set_caption('Classic Donkey Kong Rebuild!')
@@ -176,9 +181,13 @@ def check_victory(player, level_data):
     return player.bottom.colliderect(target_rect)
 
 # Função principal do jogo
-def main(screen):
+def main(screen, username):
     # Declaração de variáveis globais
     global barrel_spawn_time, barrel_count, fireball_trigger, first_fireball_trigger, counter, score, high_score, lives, bonus, victory, reset_game, active_level
+
+    # No início da função principal do jogo
+    score = get_score(username)
+
 
     # Grupos de sprites para barris, chamas e martelos
     barrels = pygame.sprite.Group()
@@ -316,6 +325,10 @@ def main(screen):
 
         # Atualiza a tela
         pygame.display.flip()
+
+        # No final da função principal do jogo, onde a pontuação é registrada
+        update_score(username, score)
+
     
     # Encerra o jogo
     pygame.quit()
